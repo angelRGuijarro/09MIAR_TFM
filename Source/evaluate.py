@@ -3,7 +3,9 @@ Basado en el "Official evaluation script for SQuAD version 2.0."
 
 He cambiado la normalización para eliminar los artículos en español y suprimido los métodos que no se utilizan en este proyecto.
 
-He cambiado la función make_quid_to_has_ans, get_raw_scores para utilizar los campos de nuestro dataset
+He cambiado la función make_quid_to_has_ans, get_raw_scores para utilizar los campos de mi dataset 
+aunque viendo que estas funciones se usan para leer ficheros json con los datos en lugar de trabajar con las variables en ejecución,
+he creado mis propios métodos get_raw_scores_by_example y get_raw_score_by_prediction para probar distintas formas de inferencia.
 """
 import argparse
 import collections
@@ -46,13 +48,13 @@ import numpy as np
 #     return parser.parse_args()
 
 
-def make_qid_to_has_ans(dataset):
-    qid_to_has_ans = {}
-    for article in dataset:
-        for p in article["escritura"]:
-            for qa in p["qas"]:
-                qid_to_has_ans[qa["id"]] = bool(qa["answers"]["text"])
-    return qid_to_has_ans
+# def make_qid_to_has_ans(dataset):
+#     qid_to_has_ans = {}
+#     for article in dataset:
+#         for p in article["escritura"]:
+#             for qa in p["qas"]:
+#                 qid_to_has_ans[qa["id"]] = bool(qa["answers"]["text"])
+#     return qid_to_has_ans
 
 
 def normalize_answer(s):
@@ -116,25 +118,25 @@ def get_raw_scores_by_prediction(dataset,predictions):
         exact_scores[qid]=(max(compute_exact(gold_answer,pred['answer']) for gold_answer  in gold_list['text']))
     return exact_scores, f1_scores
 
-def get_raw_scores(dataset, preds):
-    exact_scores = {}
-    f1_scores = {}
-    for article in dataset:
-        for p in article["escritura"]:
-            for qa in p["qas"]:
-                qid = qa["id"]
-                gold_answers = [t for t in qa["answers"]["text"] if normalize_answer(t)]
-                if not gold_answers:
-                    # For unanswerable questions, only correct answer is empty string
-                    gold_answers = [""]
-                if qid not in preds:
-                    print("Missing prediction for %s" % qid)
-                    continue
-                a_pred = preds[qid]
-                # Take max over all gold answers
-                exact_scores[qid] = max(compute_exact(a, a_pred) for a in gold_answers)
-                f1_scores[qid] = max(compute_f1(a, a_pred) for a in gold_answers)
-    return exact_scores, f1_scores
+# def get_raw_scores(dataset, preds):
+#     exact_scores = {}
+#     f1_scores = {}
+#     for article in dataset:
+#         for p in article["escritura"]:
+#             for qa in p["qas"]:
+#                 qid = qa["id"]
+#                 gold_answers = [t for t in qa["answers"]["text"] if normalize_answer(t)]
+#                 if not gold_answers:
+#                     # For unanswerable questions, only correct answer is empty string
+#                     gold_answers = [""]
+#                 if qid not in preds:
+#                     print("Missing prediction for %s" % qid)
+#                     continue
+#                 a_pred = preds[qid]
+#                 # Take max over all gold answers
+#                 exact_scores[qid] = max(compute_exact(a, a_pred) for a in gold_answers)
+#                 f1_scores[qid] = max(compute_f1(a, a_pred) for a in gold_answers)
+#     return exact_scores, f1_scores
 
 
 def apply_no_ans_threshold(scores, na_probs, qid_to_has_ans, na_prob_thresh):
