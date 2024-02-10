@@ -162,3 +162,4 @@ cython_debug/
 # Ayto Data
 Dataset/Inicial
 Dataset/RANDOM
+mlruns
