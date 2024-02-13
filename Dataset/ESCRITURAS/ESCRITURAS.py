@@ -53,9 +53,10 @@ class ESCRITURAS(datasets.GeneratorBasedBuilder):
                     context = escritura['context']
                     for qa in escritura['qas']:
                         question = qa['question']
-                        answers = qa['answers']                        
-                        yield id, {
-                            "id": id,
+                        answers = qa['answers']
+                        uid = f"{id}_{hashlib.sha256(question.encode('utf-8')).hexdigest()}"                    
+                        yield uid, {
+                            "id": uid,
                             "context": context,
                             "question": question,
                             "answers": {
