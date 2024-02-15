@@ -48,20 +48,20 @@ class ESCRITURAS(datasets.GeneratorBasedBuilder):
         with open(filepath, encoding="utf-8") as f:
             json_data = json.load(f)
             for d in json_data['data']:
-                    escritura = d['paragraph']
-                    id = escritura['id']
-                    context = escritura['context']
-                    for qa in escritura['qas']:
-                        question = qa['question']
-                        answers = qa['answers']
-                        uid = f"{id}_{hashlib.sha256(question.encode('utf-8')).hexdigest()}"                    
-                        yield uid, {
-                            "id": uid,
-                            "context": context,
-                            "question": question,
-                            "answers": {
-                                "answer_start": [answer["answer_start"] for answer in answers],
-                                "text": [answer["text"] for answer in answers]
-                            },
-                        }
+                    for escritura in d['paragraphs']:                    
+                        id = escritura['id']
+                        context = escritura['context']
+                        for qa in escritura['qas']:
+                            question = qa['question']
+                            answers = qa['answers']
+                            uid = f"{id}_{hashlib.sha256(question.encode('utf-8')).hexdigest()}"                    
+                            yield uid, {
+                                "id": uid,
+                                "context": context,
+                                "question": question,
+                                "answers": {
+                                    "answer_start": [answer["answer_start"] for answer in answers],
+                                    "text": [answer["text"] for answer in answers]
+                                },
+                            }
 
