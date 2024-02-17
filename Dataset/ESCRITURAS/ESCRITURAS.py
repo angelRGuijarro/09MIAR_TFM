@@ -41,8 +41,9 @@ class ESCRITURAS(datasets.GeneratorBasedBuilder):
                 description=self.config.description,
                 features=datasets.Features({
                     "id": datasets.Value("string"),
-                    "tokens": datasets.Sequence(datasets.Value("sring")),
-                    "ner_tags": datasets.Sequence(datasets.featuresClassLabel(
+                    "tokens": datasets.Sequence(datasets.Value("string")),
+                    "tags_labels": datasets.Sequence("string"),
+                    "ner_tags": datasets.Sequence(datasets.features.ClassLabel(
                         names=[
                             'O',
                             'B-PROTO','I-PROTO', # protocolo
@@ -102,7 +103,8 @@ class ESCRITURAS(datasets.GeneratorBasedBuilder):
             elif self.config.name == "NER":
                 for escritura in json_data:
                     id = escritura['id']
-                    t = escritura['tokens']
-                    nt = escritura['ner_tags']
-                    yield id, {'id': id, 'tokens': t, 'ner_tags': nt}
+                    yield id, {'id': id,
+                                'tokens': escritura['tokens'],
+                                'tags_labels': escritura['labels'],
+                                'ner_tags': escritura['ner_tags']}
 
