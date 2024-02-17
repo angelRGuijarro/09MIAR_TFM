@@ -33,8 +33,8 @@ class ESCRITURAS(datasets.GeneratorBasedBuilder):
                     "answers": datasets.features.Sequence({
                         "answer_start": datasets.Value("int32"),
                         "text": datasets.Value("string"),
-                    }),
-                }),
+                    })
+                })
             )
         elif self.config.name == "NER":
             info = datasets.DatasetInfo(
@@ -42,7 +42,6 @@ class ESCRITURAS(datasets.GeneratorBasedBuilder):
                 features=datasets.Features({
                     "id": datasets.Value("string"),
                     "tokens": datasets.Sequence(datasets.Value("string")),
-                    "tags_labels": datasets.Sequence("string"),
                     "ner_tags": datasets.Sequence(datasets.features.ClassLabel(
                         names=[
                             'O',
@@ -105,6 +104,5 @@ class ESCRITURAS(datasets.GeneratorBasedBuilder):
                     id = escritura['id']
                     yield id, {'id': id,
                                 'tokens': escritura['tokens'],
-                                'tags_labels': escritura['labels'],
                                 'ner_tags': escritura['ner_tags']}
 
