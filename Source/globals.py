@@ -15,3 +15,7 @@ RANDOM_NOMBRES = os.path.join(DATA_DIR,"RANDOM","nombres.jsonl")
 RANDOM_APELLIDOS = os.path.join(DATA_DIR,"RANDOM","apellidos.jsonl")
 RANDOM_EMPRESAS = os.path.join(DATA_DIR,"RANDOM","empresas.jsonl")
 RANDOM_VIAS = os.path.join(DATA_DIR,"RANDOM","vias.jsonl")
+
+# Carpetas para modelos y entrenamiento
+TRAINING_DIR = os.path.join("..","training")
+MODELS_DIR = os.path.join("..","Models")
