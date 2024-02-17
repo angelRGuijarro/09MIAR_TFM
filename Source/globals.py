@@ -91,3 +91,8 @@ TIPO_ETIQUETA = {
     Tipo_Contenido.TIPO_DOCUMENTO: 'TDOC'
     }
 
+
+
+# Carpetas para modelos y entrenamiento
+TRAINING_DIR = os.path.join("..","training")
+MODELS_DIR = os.path.join("..","Models")
