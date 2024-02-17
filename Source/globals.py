@@ -24,6 +24,11 @@ RANDOM_EMPRESAS = os.path.join(DATA_DIR,"RANDOM","empresas.jsonl")
 RANDOM_VIAS = os.path.join(DATA_DIR,"RANDOM","vias.jsonl")
 """Diccionario de vías usadas en las fichas"""
 
+# Carpetas para modelos y entrenamiento
+TRAINING_DIR = os.path.join("..","training")
+MODELS_DIR = os.path.join("..","Models")
+
+
 class Tipo_Contenido(StrEnum):
     """Enumerado para trabajar con los tipos texto para diferenciar las preguntas del contexto"""
     # Tipos de preguntas #
@@ -90,9 +95,3 @@ TIPO_ETIQUETA = {
     Tipo_Contenido.NOTARIO: 'NOT',
     Tipo_Contenido.TIPO_DOCUMENTO: 'TDOC'
     }
-
-
-
-# Carpetas para modelos y entrenamiento
-TRAINING_DIR = os.path.join("..","training")
-MODELS_DIR = os.path.join("..","Models")
