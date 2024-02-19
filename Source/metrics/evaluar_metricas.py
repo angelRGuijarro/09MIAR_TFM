@@ -10,11 +10,12 @@ from seqeval.metrics import f1_score, precision_score, recall_score,accuracy_sco
 import torch
 import mlflow
 from statistics import mean
+from globals import label2id, id2label
 
 # Definición de funciones para evaluar las métricas que se usarán en distintos cuadernos
 
 def evaluar_metricas_QA(model_path_or_name, dataset, batch_size=512, split='test'):
-    """Escribe por pantalla y guarda en MLflow los valores de las métricas f1 y exact match para este modelo y dataset."""
+    """Escribe por pantalla y guarda en MLflow los valores de las métricas f1_score y exact_match para este modelo y dataset."""
     model = AutoModelForQuestionAnswering.from_pretrained(model_path_or_name)
     tokenizer = AutoTokenizer.from_pretrained(model_path_or_name)
 
@@ -45,19 +46,22 @@ def evaluar_metricas_QA(model_path_or_name, dataset, batch_size=512, split='test
     
     mlflow.log_param('dataset_split', split)
     mlflow.log_param('model_name',model.name_or_path)
-    mlflow.log_metric('f1', f1_mean)
-    mlflow.log_metric('exact', exact_mean)
+    mlflow.log_metric('f1_score', f1_mean)
+    mlflow.log_metric('exact_match', exact_mean)
     print(model.name_or_path)
     print('\tf1:', f1_mean)
     print('\texact:', exact_mean)
 
-def evaluar_metricas_NER(model_path_or_name, dataset, batch_size=64,split='test'):
-    """Escribe por pantalla y guarda en MLflow los valores de las métricas f1 y exact match para este modelo y dataset."""
-    model = AutoModelForTokenClassification.from_pretrained(model_path_or_name)
+def evaluar_metricas_NER(model_path_or_name, dataset:datasets.Dataset, batch_size=512,split='test'):
+    """Escribe por pantalla y guarda en MLflow los valores de las métricas f1_score, precision, recall y accuracy para este modelo y dataset."""    
+    
+    lista_etiquetas = dataset.features['ner_tags'].feature.names    
+    model  = AutoModelForTokenClassification.from_pretrained(model_path_or_name, 
+                                                         num_labels=len(lista_etiquetas), ignore_mismatched_sizes=True,
+                                                         id2label=id2label,label2id=label2id)
     tokenizer = AutoTokenizer.from_pretrained(model_path_or_name)
     token_inputs = tokenizer(dataset['tokens'], is_split_into_words=True, truncation=True, padding=True)
 
-    lista_etiquetas = dataset.features['ner_tags'].feature.names    
     dataset = dataset.map(lambda x: {'labels': [lista_etiquetas[label_id] for label_id in x['ner_tags']],
                                      'texts': " ".join(x['tokens'])})
     labels = dataset['labels']
@@ -90,3 +94,6 @@ def evaluar_metricas_NER(model_path_or_name, dataset, batch_size=64,split='test'
     mlflow.log_metric('accuracy', accuracy)
     print(model.name_or_path)
     print('\tf1:', f1)
+    print('\tprecision:', precision)
+    print('\trecall:', recall)
+    print('\taccuracy:', accuracy)
